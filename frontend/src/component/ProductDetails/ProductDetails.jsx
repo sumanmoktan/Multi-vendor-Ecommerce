@@ -16,6 +16,7 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { getAllProductsShop } from "../../redux/action/productAction";
+import { backend_url } from "../../server";
 
 const ProductDetails = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -98,43 +99,65 @@ const ProductDetails = ({ data }) => {
   return (
     <div className="bg-white">
       {data ? (
-        <div className={`${styles.section} w-[90%] 800px:w-[80%]`}>
+        <div className={`${styles.section} w-[90%] sm:w-[80%]`}>
           <div className="w-full py-5">
             <div className="block w-full sm:flex">
               <div className="w-full sm:w-[50%]">
-                {/* <img
-                  src={data.image_Url[select].url}
+                <img
+                  src={`${backend_url}/img/product/${
+                    data.images && data.images[select].url
+                  }`}
                   alt=""
                   className="w-[80%]"
-                /> */}
+                />
                 <div className="w-full flex">
-                  <div
+                  {/* <div
                     className={`${
                       select === 0 ? "border" : "null"
                     } cursor-pointer`}
                   >
-                    {/* <img
-                      src={data?.image_Url[0].url}
+                    <img
+                      src={`${backend_url}/img/product/${
+                        data.images && data.images[0]
+                      }`}
                       alt=""
                       className="h-[200px]"
                       onClick={() => setSelect(0)}
-                    /> */}
-                  </div>
-                  <div
+                    />
+                  </div> */}
+                  {data.images &&
+                    data.images.map((image, index) => (
+                      <div
+                        key={index}
+                        className={`${
+                          select === index ? "border" : "null"
+                        } cursor-pointer`}
+                      >
+                        <img
+                          src={`${image}`}
+                          alt=""
+                          className="h-[200px] overflow-hidden mr-3 mt-3"
+                          onClick={() => setSelect(index)}
+                        />
+                      </div>
+                    ))}
+                  {/* <div
                     className={`${
                       select === 1 ? "border" : "null"
                     } cursor-pointer`}
                   >
-                    {/* <img
-                      src={data?.image_Url[1].url}
+                    <img
+                      src={`${backend_url}/img/product/${
+                        data.images && data.images[1]
+                      }`}
                       alt=""
                       className="h-[200px]"
                       onClick={() => setSelect(1)}
-                    /> */}
-                  </div>
+                    />
+                  </div> */}
                 </div>
               </div>
-              <div className="w-full 800px:w-[50%] pt-5">
+              <div className="w-full sm:w-[50%] pt-5">
                 <h1 className={`${styles.productTitle}`}>{data.name}</h1>
                 <p>{data.description}</p>
                 <div className="flex pt-3">

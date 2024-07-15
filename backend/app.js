@@ -1,6 +1,7 @@
 const express = require("express");
 const ErrorHandler = require("./middleware/error");
 const app = express();
+const path = require("path");
 const cookieparser = require("cookie-parser");
 const bodyparser = require("body-parser");
 const cors = require("cors");
@@ -15,6 +16,8 @@ const paymentRoute = require("./routes/paymentRoute");
 const orderRoute = require("./routes/orderRoute");
 
 app.use(express.json());
+// Serve static files from the public directory
+app.use(express.static( "public"));
 app.use(cookieparser());
 app.use(
   cors({

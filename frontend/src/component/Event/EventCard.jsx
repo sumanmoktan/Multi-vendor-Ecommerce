@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart } from "../../redux/action/cartAction";
 import { toast } from "react-toastify";
+import { backend_url } from "../../server"
 
 const EventCard = ({ active, data }) => {
   const { cart } = useSelector((state) => state.cart);
@@ -31,7 +32,7 @@ const EventCard = ({ active, data }) => {
       } lg:flex p-2 mb-2`}
     >
       <div className="w-full lg:-w[50%] m-auto">
-        <img src="https://m.media-amazon.com/images/I/31Vle5fVdaL.jpg" alt="" />
+        <img src={`${backend_url}/img/product/${data.images && data.images[0]}`} alt="" />
       </div>
       <div className="w-full lg:[w-50%] flex flex-col justify-center">
         <h3 className={`${styles.productTitle}`}>{data.name}</h3>

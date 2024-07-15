@@ -7,6 +7,7 @@ import {
   addToWishlist,
   removeFromWishlist,
 } from "../../../redux/action/wishlistAction";
+import { backend_url } from "../../../server";
 import {
   AiFillHeart,
   AiOutlineHeart,
@@ -81,7 +82,12 @@ const ProductCardDetails = ({ setOpen, data }) => {
             />
             <div className="block w-full sm:flex">
               <div className="w-full 800px:w-[50%]">
-                {/* <img src={data.image_Url[0].url} alt="" /> */}
+                <img
+                  src={`${backend_url}/img/product/${
+                    data.images && data.images[0]
+                  }`}
+                  alt=""
+                />
                 <div className="flex">
                   {/* <img
                     src={data.shop.shop_avatar.url}
