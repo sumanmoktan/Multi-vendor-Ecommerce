@@ -5,7 +5,7 @@ import Header from "../component/Layout/Header";
 // import { productData } from "../static/data";
 import ProductCard from "../component/Route/ProductCard/ProductCard";
 import Footer from "../component/Layout/Footer";
-import Loader from "../component/Layout/Loader"
+import Loader from "../component/Layout/Loader";
 import styles from "../styles/Style";
 
 const BestSellingPage = () => {

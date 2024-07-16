@@ -6,6 +6,7 @@ import styles from "../../styles/Style";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromWishlist } from "../../redux/action/wishlistAction";
 import { addTocart } from "../../redux/action/cartAction";
+import { backend_url } from "../../server";
 
 const WhisList = ({ setOpenWishlist }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -99,7 +100,7 @@ const SingleCart = ({ data, removeFromWishlistHandler, addToCartHandler }) => {
           onClick={() => removeFromWishlistHandler(data)}
         />
         <img
-          src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shopify.com%2Fblog%2F12206313-the-ultimate-diy-guide-to-beautiful-product-photography&psig=AOvVaw1_liyJEQghf5Ea9OfszwKZ&ust=1705203377831000&source=images&cd=vfe&ved=0CBMQjRxqFwoTCPDX-9-32YMDFQAAAAAdAAAAABAE"
+          src={`${backend_url}/img/product/${data.images[0]}`}
           alt=""
           className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
         />

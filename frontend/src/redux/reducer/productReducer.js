@@ -12,12 +12,12 @@ export const productReducer = createReducer(initialState, (builder) => {
     .addCase("productCreateSuccess", (state, action) => {
       state.isLoading = false;
       state.product = action.payload;
-      state.error = null; // Clear error when success occurs
+      state.success = true;
     })
     .addCase("productCreateFail", (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
-      state.success = false;
+      state.success = false; 
     })
 
     // get all product of shop
