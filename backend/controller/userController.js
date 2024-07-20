@@ -28,7 +28,7 @@ exports.uploadUserPhoto = upload.single("photo");
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  req.file.filename = `user-${Date.now()}.jpeg`;
 
   await sharp(req.file.buffer)
     .resize(500, 500)
@@ -43,25 +43,40 @@ exports.createUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
     const userEmail = await User.findOne({ email });
+    // if (userEmail) {
+    //   const filename = req.file.filename;
+    //   const filePath = `uploads/${filename}`;
+    //   fs.unlink(filePath, (err) => {
+    //     if (err) {
+    //       console.log(err);
+    //       res.status(500).json({ message: "Error deleting file" });
+    //     }
+    //   });
+    //   return next(new ErrorHandler("User already exist", 400));
+    // }
+
+    // const filename = req.file.filename;
+    // const fileUrl = path.join(filename);
     if (userEmail) {
-      const filename = req.file.filename;
-      const filePath = `uploads/${filename}`;
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.log(err);
-          res.status(500).json({ message: "Error deleting file" });
-        }
-      });
-      return next(new ErrorHandler("User already exist", 400));
+      if (req.file) {
+        const filePath = `public/img/users/${req.file.filename}`;
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log(err);
+            res.status(500).json({ message: "Error deleting file" });
+          }
+        });
+      }
+      return next(new ErrorHandler("User already exists", 400));
     }
 
     const filename = req.file.filename;
-    const fileUrl = path.join(filename);
+    // const fileUrl = path.join(filename);
     const user = {
       name: name,
       email: email,
       password: password,
-      avatar: fileUrl,
+      photo: filename,
     };
     const newUser = await User.create(user);
     res.status(201).json({

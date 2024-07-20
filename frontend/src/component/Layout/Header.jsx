@@ -97,7 +97,7 @@ const Header = ({ activeHeading }) => {
             ) : null}
           </div>
           <div className={`${styles.button}`}>
-          <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
+            <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
               <h1 className="text-[#fff] flex items-center">
                 {isSeller ? "Go Dashboard" : "Become Seller"}{" "}
                 <IoIosArrowForward className="ml-1" />
@@ -174,8 +174,12 @@ const Header = ({ activeHeading }) => {
               >
                 {isAuthenticated ? (
                   <Link to="/profile" className="text-white">
-                    {/* <img src={`${backend_url}${user.name}`} alt="" /> */}
-                    {user.name}
+                    <img
+                      src={`${backend_url}/img/users/${user.photo}`}
+                      className="w-[35px] h-[35px] rounded-full"
+                      alt=""
+                    />
+                    {/* {user.name} */}
                   </Link>
                 ) : (
                   <Link to="/login">

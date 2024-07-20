@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 import { RxCross1 } from "react-icons/rx";
 import { Country, State } from "country-state-city";
 import axios from "axios";
-import { server } from "../../server";
+import { server, backend_url } from "../../server";
 import { getAllOrdersOfUser } from "../../redux/action/orderAction";
 
 const ProfileContent = ({ active }) => {
@@ -53,7 +53,7 @@ const ProfileContent = ({ active }) => {
           <div className="flex justify-center w-full">
             <div className="relative">
               <img
-                src={`${user?.avatar?.url}`}
+                src={`${backend_url}/img/users/${user.photo}`}
                 className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
                 alt=""
               />

@@ -1,10 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controller/userController");
-const { upload } = require("../multer");
+// const { upload } = require("../multer");
 const { isAuthenticated } = require("../middleware/auth");
 
-router.post("/create-user", upload.single("file"), userController.createUser);
+router.post(
+  "/create-user",
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.createUser
+);
 router.post("/activation", userController.activateUser);
 router.post("/login", userController.Login);
 router.get("/logout", isAuthenticated, userController.Logout);
