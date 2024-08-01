@@ -42,41 +42,11 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
 exports.createUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-    const userEmail = await User.findOne({ email });
-    // if (userEmail) {
-    //   const filename = req.file.filename;
-    //   const filePath = `uploads/${filename}`;
-    //   fs.unlink(filePath, (err) => {
-    //     if (err) {
-    //       console.log(err);
-    //       res.status(500).json({ message: "Error deleting file" });
-    //     }
-    //   });
-    //   return next(new ErrorHandler("User already exist", 400));
-    // }
-
-    // const filename = req.file.filename;
-    // const fileUrl = path.join(filename);
-    if (userEmail) {
-      if (req.file) {
-        const filePath = `public/img/users/${req.file.filename}`;
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.log(err);
-            res.status(500).json({ message: "Error deleting file" });
-          }
-        });
-      }
-      return next(new ErrorHandler("User already exists", 400));
-    }
-
-    const filename = req.file.filename;
-    // const fileUrl = path.join(filename);
     const user = {
       name: name,
       email: email,
       password: password,
-      photo: filename,
+      photo: req.file.filename,
     };
     const newUser = await User.create(user);
     res.status(201).json({
