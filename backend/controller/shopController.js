@@ -1,7 +1,40 @@
+const multer = require("multer");
+const sharp = require("sharp");
 const shopModel = require("../model/shopModel");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsync = require("../middleware/catchAsync");
 const sendShopToken = require("../utils/sellerToken");
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(new appError("Not an image! Please upload only images.", 400), false);
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadShopPhoto = upload.single("avatar");
+
+exports.resizeShopPhoto = catchAsync(async (req, res, next) => {
+  if (!req.file) return next();
+
+  req.file.filename = `shops-${Date.now()}.jpeg`;
+
+  await sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/shops/${req.file.filename}`);
+
+  next();
+});
 
 exports.createShop = catchAsync(async (req, res, next) => {
   const { email } = req.body;
@@ -15,7 +48,7 @@ exports.createShop = catchAsync(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    // avatar: req.file.avatar,
+    avatar: req.file.filename,
     zipCode: req.body.zipCode,
     address: req.body.address,
     phoneNumber: req.body.phoneNumber,

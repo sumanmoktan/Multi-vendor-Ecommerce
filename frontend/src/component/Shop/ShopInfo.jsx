@@ -6,10 +6,12 @@ import styles from "../../styles/Style";
 import Loader from "../Layout/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsShop } from "../../redux/action/productAction";
+import { backend_url } from "../../server";
 
 const ShopInfo = ({ isOwner }) => {
   const [data, setData] = useState({});
   const { products } = useSelector((state) => state.products);
+  const {seller} = useSelector((state)=>state.seller);
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -59,7 +61,7 @@ const ShopInfo = ({ isOwner }) => {
           <div className="w-full py-5">
             <div className="w-full flex item-center justify-center">
               <img
-                src={`${data.avatar?.url}`}
+                src={`${backend_url}/img/shops/${seller.avatar}`}
                 alt=""
                 className="w-[150px] h-[150px] object-cover rounded-full"
               />

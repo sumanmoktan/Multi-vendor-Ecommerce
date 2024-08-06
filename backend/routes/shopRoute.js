@@ -4,7 +4,12 @@ const { isSeller } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.post("/create-shop", shopController.createShop);
+router.post(
+  "/create-shop",
+  shopController.uploadShopPhoto,
+  shopController.resizeShopPhoto,
+  shopController.createShop
+);
 router.post("/login-shop", shopController.login);
 router.get("/get-seller", isSeller, shopController.getSeller);
 router.get("/get-shop-info/:id", shopController.shopInfo);

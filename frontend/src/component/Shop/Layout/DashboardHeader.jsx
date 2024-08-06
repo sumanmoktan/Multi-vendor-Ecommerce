@@ -5,6 +5,7 @@ import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { backend_url } from "../../../server";
 
 const DashboardHeader = () => {
   const { seller } = useSelector((state) => state.seller);
@@ -27,14 +28,14 @@ const DashboardHeader = () => {
               className="mx-5 cursor-pointer"
             />
           </Link>
-         <Link to="/dashboard-events" className="sm:block hidden">
+          <Link to="/dashboard-events" className="sm:block hidden">
             <MdOutlineLocalOffer
               color="#555"
               size={30}
               className="mx-5 cursor-pointer"
             />
           </Link>
-            <Link to="/dashboard-products" className="sm:block hidden">
+          <Link to="/dashboard-products" className="sm:block hidden">
             <FiShoppingBag
               color="#555"
               size={30}
@@ -53,7 +54,7 @@ const DashboardHeader = () => {
           </Link>
           <Link to={`/shop/${seller._id}`}>
             <img
-              src={`${seller.avatar?.url}`}
+              src={`${backend_url}/img/shops/${seller.avatar}`}
               alt=""
               className="w-[50px] h-[50px] rounded-full object-cover"
             />

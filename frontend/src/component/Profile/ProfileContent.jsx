@@ -46,6 +46,9 @@ const ProfileContent = ({ active }) => {
     e.preventDefault();
     dispatch(updateUserInformation(name, email, phoneNumber, password));
   };
+
+
+
   return (
     <div className="w-full">
       {active === 1 && (
@@ -62,7 +65,7 @@ const ProfileContent = ({ active }) => {
                   type="file"
                   id="image"
                   className="hidden"
-                  //   onChange={handleImage}
+                  // onChange={handlePhotoChange}
                 />
                 <label htmlFor="image">
                   <AiOutlineCamera />

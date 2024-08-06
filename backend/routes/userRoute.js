@@ -20,6 +20,13 @@ router.patch(
   userController.updateUserInfo
 );
 router.patch(
+  "/update-user-avatar",
+  isAuthenticated,
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateAvatar
+);
+router.patch(
   "/update-user-address",
   isAuthenticated,
   userController.updateAddress

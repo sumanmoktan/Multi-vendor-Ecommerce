@@ -194,13 +194,21 @@ exports.updateUserInfo = catchAsync(async (req, res, next) => {
   });
 });
 
-// exports.updateAvatar = catchAsync(async (req, res, next) => {
-//   const existUser = await User.findById(req.user.id);
+exports.updateAvatar = catchAsync(async (req, res, next) => {
+  const existUser = await User.findById(req.user.id);
 
-//   if (!existUser) {
-//     return next(new ErrorHandler("User is not found with id", 404));
-//   }
-// });
+  if (!existUser) {
+    return next(new ErrorHandler("User is not found with id", 404));
+  }
+
+  existUser.photo = req.file.filename;
+  await existUser.save();
+
+  res.status(200).json({
+    status: "success",
+    message: "update avatar successfully",
+  });
+});
 
 //update user address
 exports.updateAddress = catchAsync(async (req, res, next) => {

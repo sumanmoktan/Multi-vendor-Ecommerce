@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const shopSchema = new mongoose.Schema({
@@ -32,16 +32,10 @@ const shopSchema = new mongoose.Schema({
     type: String,
     default: "Seller",
   },
-  // avatar: {
-  //   public_id: {
-  //     type: String,
-  //     required: true,
-  //   },
-  //   url: {
-  //     type: String,
-  //     required: true,
-  //   },
-  // },
+  avatar: {
+    type: String,
+    default: "default.jpg",
+  },
   zipCode: {
     type: Number,
     required: true,

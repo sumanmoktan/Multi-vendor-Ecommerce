@@ -13,29 +13,62 @@ const ShopCreatePage = () => {
   const [phoneNumber, setPhoneNumber] = useState();
   const [address, setAddress] = useState("");
   const [zipCode, setZipCode] = useState();
-  const [avatar, setAvatar] = useState();
+  const [avatar, setAvatar] = useState(null);
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   axios
+  //     .post(`${server}/api/v1/shop/create-shop`, {
+  //       name,
+  //       email,
+  //       password,
+  //       avatar,
+  //       zipCode,
+  //       address,
+  //       phoneNumber,
+  //     })
+  //     .then((res) => {
+  //       toast.success(res.data.message);
+  //       setName("");
+  //       setEmail("");
+  //       setPassword("");
+  //       setAvatar(null);
+  //       setZipCode("");
+  //       setAddress("");
+  //       setPhoneNumber("");
+  //     })
+  //     .catch((error) => {
+  //       toast.error(error.response.data.message);
+  //     });
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("avatar", avatar);
+    formData.append("zipCode", zipCode);
+    formData.append("address", address);
+    formData.append("phoneNumber", phoneNumber);
+
     axios
-      .post(`${server}/api/v1/shop/create-shop`, {
-        name,
-        email,
-        password,
-        // avatar,
-        zipCode,
-        address,
-        phoneNumber,
+      .post(`${server}/api/v1/shop/create-shop`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       })
       .then((res) => {
         toast.success(res.data.message);
         setName("");
         setEmail("");
         setPassword("");
-        // setAvatar();
+        setAvatar(null);
         setZipCode("");
         setAddress("");
         setPhoneNumber("");
@@ -45,17 +78,10 @@ const ShopCreatePage = () => {
       });
   };
 
-  // const handleFileInputChange = (e) => {
-  //   const reader = new FileReader();
-
-  //   reader.onload = () => {
-  //     if (reader.readyState === 2) {
-  //       setAvatar(reader.result);
-  //     }
-  //   };
-
-  //   reader.readAsDataURL(e.target.files[0]);
-  // };
+  const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
+    setAvatar(file);
+  };
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -204,7 +230,7 @@ const ShopCreatePage = () => {
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
                     <img
-                      src={avatar}
+                      src={URL.createObjectURL(avatar)}
                       alt="avatar"
                       className="h-full w-full object-cover rounded-full"
                     />
@@ -221,7 +247,8 @@ const ShopCreatePage = () => {
                     type="file"
                     name="avatar"
                     id="file-input"
-                    // onChange={handleFileInputChange}
+                    accept=".jpg,.jpeg,.png"
+                    onChange={handleFileInputChange}
                     className="sr-only"
                   />
                 </label>
