@@ -270,6 +270,7 @@ const ProductDetailInfo = ({
   averageRating,
 }) => {
   const [active, setActive] = useState(1);
+  const { user } = useSelector((state) => state.user);
   return (
     <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
       <div className="w-full flex justify-between border-b pt-10 pb-2">
@@ -327,7 +328,7 @@ const ProductDetailInfo = ({
             data.reviews.map((item, index) => (
               <div className="w-full flex my-2">
                 <img
-                  src={`${item.user.avatar?.url}`}
+                  src={`${backend_url}/img/users/${user.photo}`}
                   alt=""
                   className="w-[50px] h-[50px] rounded-full"
                 />

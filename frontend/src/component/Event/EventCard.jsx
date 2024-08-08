@@ -31,7 +31,7 @@ const EventCard = ({ active, data }) => {
         active ? "unset" : "mb-12"
       } lg:flex p-2 mb-2`}
     >
-      <div className="w-full lg:-w[50%] m-auto">
+      <div className="w-full lg:-w[50%] m-auto ">
         <img src={`${backend_url}/img/product/${data.images && data.images[0]}`} alt="" />
       </div>
       <div className="w-full lg:[w-50%] flex flex-col justify-center">

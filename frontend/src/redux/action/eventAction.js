@@ -8,18 +8,19 @@ export const createevent = (data) => async (dispatch) => {
       type: "eventCreateRequest",
     });
 
-    const { d } = await axios.post(`${server}/api/v1/event/create-event`, data);
+    const { data: response } = await axios.post(`${server}/api/v1/event/create-event`, data);
     dispatch({
       type: "eventCreateSuccess",
-      payload: d.event,
+      payload: response.event,
     });
   } catch (error) {
     dispatch({
       type: "eventCreateFail",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message,
     });
   }
 };
+
 
 // get all events of a shop
 export const getAllEventsShop = (id) => async (dispatch) => {

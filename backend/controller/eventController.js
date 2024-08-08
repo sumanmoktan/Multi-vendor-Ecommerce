@@ -1,51 +1,92 @@
+const multer = require("multer");
+const sharp = require("sharp");
 const catchAsync = require("../middleware/catchAsync");
 const ErrorHandler = require("../utils/ErrorHandler");
 const eventModel = require("../model/eventModel");
 const shopModel = require("../model/shopModel");
 
-exports.createEvent = catchAsync(async (req, res, next) => {
-  try {
-    const shopId = req.body.shopId;
-    const shop = await shopModel.findById(shopId);
+const multerStorage = multer.memoryStorage();
 
-    if (!shop) {
-      return next(new ErrorHandler("Shop Id is invalid", 400));
-    } else {
-      //   let images = [];
-
-      //   if (typeof req.body.images === "string") {
-      //     images.push(req.body.images);
-      //   } else {
-      //     images = req.body.images;
-      //   }
-
-      //   const imagesLinks = [];
-
-      //   for (let i = 0; i < images.length; i++) {
-      //     const result = await cloudinary.v2.uploader.upload(images[i], {
-      //       folder: "products",
-      //     });
-
-      //     imagesLinks.push({
-      //       public_id: result.public_id,
-      //       url: result.secure_url,
-      //     });
-      //   }
-
-      const productData = req.body;
-      // productData.images = imagesLinks;
-      productData.shop = shop;
-
-      const event = await eventModel.create(productData);
-
-      res.status(201).json({
-        success: true,
-        event,
-      });
-    }
-  } catch (error) {
-    return next(new ErrorHandler(error, 400));
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(new appError("Not an image! Please upload only images.", 400), false);
   }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadEventImages = upload.fields([{ name: "images", maxCount: 2 }]);
+
+exports.resizeEventImages = catchAsync(async (req, res, next) => {
+  if (!req.files || !req.files.images) return next();
+
+  // 2) Images
+  req.body.images = [];
+
+  await Promise.all(
+    req.files.images.map(async (file, i) => {
+      const filename = `Event-${Date.now()}-${i + 1}.jpeg.jpeg`;
+
+      await sharp(file.buffer)
+        .resize(2000, 1333)
+        .toFormat("jpeg")
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/product/${filename}`);
+
+      req.body.images.push(filename);
+    })
+  );
+  next();
+});
+
+exports.createEvent = catchAsync(async (req, res, next) => {
+//   try {
+//     const shopId = req.body.shopId;
+//     const shop = await shopModel.findById(shopId);
+
+//     if (!shop) {
+//       return next(new ErrorHandler("Shop Id is invalid", 400));
+//     } else {
+//       const productData = req.body;
+//       productData.shop = shop;
+
+//       const event = await eventModel.create(productData);
+
+//       res.status(201).json({
+//         success: true,
+//         event,
+//       });
+//     }
+//   } catch (error) {
+//     return next(new ErrorHandler(error, 400));
+//   }
+// });
+try {
+  const shopId = req.body.shopId;
+  const shop = await shopModel.findById(shopId);
+
+  if (!shop) {
+    return next(new ErrorHandler("Shop Id is invalid", 400));
+  } else {
+    const productData = { ...req.body, tags: JSON.parse(req.body.tags) }; // Parse tags from JSON
+
+    productData.shop = shop;
+
+    const event = await eventModel.create(productData);
+
+    res.status(201).json({
+      success: true,
+      event,
+    });
+  }
+} catch (error) {
+  return next(new ErrorHandler(error, 400));
+}
 });
 
 exports.GetEvent = catchAsync(async (req, res, next) => {
