@@ -84,13 +84,9 @@ const ProductDetails = ({ data }) => {
       0
     );
 
-  console.log(totalRatings);
-
   const avg = totalRatings / totalReviewsLength || 0;
 
   const averageRating = avg.toFixed(2);
-
-  console.log(averageRating);
 
   const handleMessage = () => {
     navigate("/inbox:conversation-ekjekjrkejr");
@@ -112,52 +108,24 @@ const ProductDetails = ({ data }) => {
                 />
 
                 <div className="w-full flex">
-                  {/* <div
-                    className={`${
-                      select === 0 ? "border" : "null"
-                    } cursor-pointer`}
-                  >
-                    <img
-                      src={`${backend_url}/img/product/${
-                        data.images && data.images[0]
-                      }`}
-                      alt=""
-                      className="h-[200px]"
-                      onClick={() => setSelect(0)}
-                    />
-                  </div> */}
                   {data.images &&
                     data.images.map((image, index) => (
                       <div
                         key={index}
                         className={`${
                           select === index ? "border" : "null"
-                        } cursor-pointer`}
+                        } cursor-pointer `}
                       >
                         <img
                           src={`${backend_url}/img/product/${
                             data.images && data.images[index]
                           }`}
                           alt=""
-                          className="h-[75px] overflow-hidden mr-3 mt-3"
+                          className="h-[70px] overflow-hidden mr-3 mt-4"
                           onClick={() => setSelect(index)}
                         />
                       </div>
                     ))}
-                  {/* <div
-                    className={`${
-                      select === 1 ? "border" : "null"
-                    } cursor-pointer`}
-                  >
-                    <img
-                      src={`${backend_url}/img/product/${
-                        data.images && data.images[1]
-                      }`}
-                      alt=""
-                      className="h-[200px]"
-                      onClick={() => setSelect(1)}
-                    />
-                  </div> */}
                 </div>
               </div>
               <div className="w-full sm:w-[50%] pt-5">
