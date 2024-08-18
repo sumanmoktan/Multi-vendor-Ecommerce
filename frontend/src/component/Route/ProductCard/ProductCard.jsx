@@ -66,7 +66,7 @@ const ProductCard = ({ data, isEvent }) => {
 
   return (
     <>
-      <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
+      <div className="w-full h-[330px] bg-green-200 rounded-lg shadow-sm p-3 relative cursor-pointer">
         <div className="flex justify-end"></div>
         <Link
           to={`${
@@ -136,7 +136,7 @@ const ProductCard = ({ data, isEvent }) => {
             size={22}
             className="cursor-pointer absolute right-2 top-14"
             onClick={() => setOpen(!open)}
-            color="#333"
+            color="white"
             title="Quick view"
           />
 
@@ -144,7 +144,7 @@ const ProductCard = ({ data, isEvent }) => {
             size={22}
             className="cursor-pointer absolute right-2 top-24"
             onClick={() => addToCartHandler(data._id)}
-            color="#444"
+            color="white"
             title="Add to cart"
           />
           {open ? (
