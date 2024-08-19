@@ -125,27 +125,20 @@ exports.logout = catchAsync(async (req, res, next) => {
 
 //update shop profile picture
 exports.UploadShopProfile = catchAsync(async (req, res, next) => {
-  let existsSeller = await shopModel.findById(req.seller._id);
+  const seller = await shopModel.findById(req.seller._id);
 
-  const imageId = existsSeller.avatar.public_id;
+  if (!seller) {
+    return next(new ErrorHandler('Seller not found with this id', 404));
+  }
 
-  await cloudinary.v2.uploader.destroy(imageId);
-
-  const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-    folder: "avatars",
-    width: 150,
-  });
-
-  existsSeller.avatar = {
-    public_id: myCloud.public_id,
-    url: myCloud.secure_url,
-  };
-
-  await existsSeller.save();
+  seller.avatar = req.file.filename;
+  await seller.save();
 
   res.status(200).json({
-    success: true,
-    seller: existsSeller,
+    status: 'success',
+    data: {
+      seller,
+    },
   });
 });
 

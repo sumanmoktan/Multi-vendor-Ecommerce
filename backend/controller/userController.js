@@ -195,18 +195,20 @@ exports.updateUserInfo = catchAsync(async (req, res, next) => {
 });
 
 exports.updateAvatar = catchAsync(async (req, res, next) => {
-  const existUser = await User.findById(req.user.id);
+  const user = await User.findById(req.user.id);
 
-  if (!existUser) {
-    return next(new ErrorHandler("User is not found with id", 404));
+  if (!user) {
+    return next(new ErrorHandler('User not found', 404));
   }
 
-  existUser.photo = req.file.filename;
-  await existUser.save();
+  user.photo = req.file.filename;
+  await user.save();
 
   res.status(200).json({
-    status: "success",
-    message: "update avatar successfully",
+    status: 'success',
+    data: {
+      user,
+    },
   });
 });
 

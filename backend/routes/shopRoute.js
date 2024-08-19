@@ -16,7 +16,13 @@ router.get("/get-shop-info/:id", shopController.shopInfo);
 router.get("/logout", shopController.logout);
 
 //update route
-router.patch("/update-shop-avatar", isSeller, shopController.UploadShopProfile);
+router.patch(
+  "/update-shop-avatar",
+  isSeller,
+  shopController.uploadShopPhoto,
+  shopController.resizeShopPhoto,
+  shopController.UploadShopProfile
+);
 router.patch("/update-seller-info", isSeller, shopController.updateSellerInfo);
 
 module.exports = router;

@@ -12,6 +12,7 @@ import { Button } from "@material-ui/core";
 import { MdTrackChanges } from "react-icons/md";
 import {
   deleteUserAddress,
+  loadUser,
   updatUserAddress,
   updateUserInformation,
 } from "../../redux/action/userAction";
@@ -28,7 +29,7 @@ const ProfileContent = ({ active }) => {
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
   const [password, setPassword] = useState("");
-  const [avatar, setAvatar] = useState(null);
+  const [photo, setPhoto] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,6 +49,25 @@ const ProfileContent = ({ active }) => {
   };
 
 
+  const handleImage = async (e) => {
+    const formData = new FormData();
+    formData.append("photo", e.target.files[0]);
+
+    axios
+      .patch(`${server}/api/v1/user/update-user-avatar`, formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        dispatch(loadUser());
+        toast.success("Avatar updated successfully!");
+      })
+      .catch((error) => {
+        toast.error("Failed to update avatar");
+      });
+  };
 
   return (
     <div className="w-full">
@@ -61,11 +81,19 @@ const ProfileContent = ({ active }) => {
                 alt=""
               />
               <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
+                {/* <input
+                  type="file"
+                  name="photo"
+                  id="file-input"
+                  accept=".jpg,.jpeg,.png"
+                  onChange={handleImage}
+                  className="sr-only"
+                /> */}
                 <input
                   type="file"
                   id="image"
                   className="hidden"
-                  // onChange={handlePhotoChange}
+                  onChange={handleImage}
                 />
                 <label htmlFor="image">
                   <AiOutlineCamera />
