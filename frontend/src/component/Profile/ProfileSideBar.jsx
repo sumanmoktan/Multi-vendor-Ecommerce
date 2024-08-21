@@ -30,7 +30,7 @@ const ProfileSideBar = ({ active, setActive }) => {
 
 
   return (
-    <div className="w-full bg-white shadow-sm rounded-[10px] p-4 pt-8">
+    <div className="w-full bg-green shadow-sm rounded-[10px] p-4 pt-8">
       <div
         className="flex items-center cursor-pointer w-full mb-8"
         onClick={() => setActive(1)}
@@ -58,7 +58,7 @@ const ProfileSideBar = ({ active, setActive }) => {
           Refunds
         </span>
       </div>
-      <div
+      {/* <div
         className="flex items-center cursor-pointer w-full mb-8"
         onClick={() => setActive(4) || navigate("/inbox")}
       >
@@ -66,7 +66,7 @@ const ProfileSideBar = ({ active, setActive }) => {
         <span className={`pl-2 ${active === 4 ? "text-[red]" : ""} sm:block hidden`}>
           Inbox
         </span>
-      </div>
+      </div> */}
       <div
         className="flex items-center cursor-pointer w-full mb-8"
         onClick={() => setActive(5)}

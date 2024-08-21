@@ -48,7 +48,6 @@ const ProfileContent = ({ active }) => {
     dispatch(updateUserInformation(name, email, phoneNumber, password));
   };
 
-
   const handleImage = async (e) => {
     const formData = new FormData();
     formData.append("photo", e.target.files[0]);
@@ -70,7 +69,7 @@ const ProfileContent = ({ active }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-green-100">
       {active === 1 && (
         <>
           <div className="flex justify-center w-full">
@@ -81,14 +80,6 @@ const ProfileContent = ({ active }) => {
                 alt=""
               />
               <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
-                {/* <input
-                  type="file"
-                  name="photo"
-                  id="file-input"
-                  accept=".jpg,.jpeg,.png"
-                  onChange={handleImage}
-                  className="sr-only"
-                /> */}
                 <input
                   type="file"
                   id="image"
@@ -110,7 +101,7 @@ const ProfileContent = ({ active }) => {
                   <label className="block pb-2">Full Name</label>
                   <input
                     type="text"
-                    className={`${styles.input} !w-[95%] mb-4 sm:mb-0`}
+                    className={`${styles.input} !w-[95%] mb-4 sm:mb-0 border-green-500`}
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -120,7 +111,7 @@ const ProfileContent = ({ active }) => {
                   <label className="block pb-2">Email Address</label>
                   <input
                     type="text"
-                    className={`${styles.input} !w-[95%] mb-1 sm:mb-0`}
+                    className={`${styles.input} !w-[95%] mb-1 sm:mb-0 border-green-500`}
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -133,7 +124,7 @@ const ProfileContent = ({ active }) => {
                   <label className="block pb-2">Phone Number</label>
                   <input
                     type="number"
-                    className={`${styles.input} !w-[95%] mb-4 sm:mb-0`}
+                    className={`${styles.input} !w-[95%] mb-4 sm:mb-0 border-green-500`}
                     required
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
@@ -144,7 +135,7 @@ const ProfileContent = ({ active }) => {
                   <label className="block pb-2">Enter your password</label>
                   <input
                     type="password"
-                    className={`${styles.input} !w-[95%] mb-4 sm:mb-0`}
+                    className={`${styles.input} !w-[95%] mb-4 sm:mb-0 border-green-500`}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -493,7 +484,7 @@ const ChangePassword = () => {
             <label className="block pb-2">Enter your old password</label>
             <input
               type="password"
-              className={`${styles.input} !w-[95%] mb-4 sm:mb-0`}
+              className={`${styles.input} !w-[95%] mb-4 sm:mb-0 border-green-500`}
               required
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
@@ -503,7 +494,7 @@ const ChangePassword = () => {
             <label className="block pb-2">Enter your new password</label>
             <input
               type="password"
-              className={`${styles.input} !w-[95%] mb-4 sm:mb-0`}
+              className={`${styles.input} !w-[95%] mb-4 sm:mb-0 border-green-500`}
               required
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
@@ -513,7 +504,7 @@ const ChangePassword = () => {
             <label className="block pb-2">Enter your confirm password</label>
             <input
               type="password"
-              className={`${styles.input} !w-[95%] mb-4 sm:mb-0`}
+              className={`${styles.input} !w-[95%] mb-4 sm:mb-0 border-green-500`}
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -739,7 +730,7 @@ const Address = () => {
       {user &&
         user.addresses.map((item, index) => (
           <div
-            className="w-full bg-white  h-min 600px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-18"
+            className="w-full bg-white  h-min 600px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-18 mt-2"
             key={index}
           >
             <div className="flex items-center">

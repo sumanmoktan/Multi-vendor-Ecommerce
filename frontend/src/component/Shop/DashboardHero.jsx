@@ -88,7 +88,7 @@ const DashboardHero = () => {
     <div className="w-full p-8">
       <h3 className="text-[22px] font-Poppins pb-2">Overview</h3>
       <div className="w-full block sm:flex items-center justify-between">
-        <div className="w-full mb-4 sm:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
+        <div className="w-full mb-4 sm:w-[30%] min-h-[20vh] bg-green-100 shadow rounded px-2 py-5">
           <div className="flex items-center">
             <AiOutlineMoneyCollect
               size={30}
@@ -110,7 +110,7 @@ const DashboardHero = () => {
           </Link>
         </div>
 
-        <div className="w-full mb-4 sm:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
+        <div className="w-full mb-4 sm:w-[30%] min-h-[20vh] bg-green-100 shadow rounded px-2 py-5">
           <div className="flex items-center">
             <MdBorderClear size={30} className="mr-2" fill="#00000085" />
             <h3
@@ -127,7 +127,7 @@ const DashboardHero = () => {
           </Link>
         </div>
 
-        <div className="w-full mb-4 sm:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
+        <div className="w-full mb-4 sm:w-[30%] min-h-[20vh] bg-green-100 shadow rounded px-2 py-5">
           <div className="flex items-center">
             <AiOutlineMoneyCollect
               size={30}
@@ -150,7 +150,7 @@ const DashboardHero = () => {
       </div>
       <br />
       <h3 className="text-[22px] font-Poppins pb-2">Latest Orders</h3>
-      <div className="w-full min-h-[45vh] bg-white rounded">
+      <div className="w-full min-h-[45vh] bg-green-100 rounded">
         <DataGrid
           rows={row}
           columns={columns}

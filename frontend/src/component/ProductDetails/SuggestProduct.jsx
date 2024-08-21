@@ -13,7 +13,7 @@ const SuggestProduct = ({ data }) => {
     setProductData(d);
   }, []);
   return (
-    <div>
+    <div className="bg-green-50">
       {data ? (
         <div className={`p-4 ${styles.section}`}>
           <h2

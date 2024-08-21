@@ -17,34 +17,6 @@ const ShopCreatePage = () => {
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   axios
-  //     .post(`${server}/api/v1/shop/create-shop`, {
-  //       name,
-  //       email,
-  //       password,
-  //       avatar,
-  //       zipCode,
-  //       address,
-  //       phoneNumber,
-  //     })
-  //     .then((res) => {
-  //       toast.success(res.data.message);
-  //       setName("");
-  //       setEmail("");
-  //       setPassword("");
-  //       setAvatar(null);
-  //       setZipCode("");
-  //       setAddress("");
-  //       setPhoneNumber("");
-  //     })
-  //     .catch((error) => {
-  //       toast.error(error.response.data.message);
-  //     });
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 

@@ -5,7 +5,7 @@ import DashboardHero from "../../component/Shop/DashboardHero";
 
 const ShopDashboardPage = () => {
   return (
-    <div>
+    <div className="bg-green-50">
       <DashboardHeader />
       <div className="flex items-start justify-between w-full">
         <div className="w-[80px] sm:w-[330px]">

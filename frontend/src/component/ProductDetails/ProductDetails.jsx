@@ -19,6 +19,7 @@ import { getAllProductsShop } from "../../redux/action/productAction";
 import { backend_url } from "../../server";
 
 const ProductDetails = ({ data }) => {
+  const {seller} = useSelector((state)=>state.seller);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { products } = useSelector((state) => state.products);
@@ -93,7 +94,7 @@ const ProductDetails = ({ data }) => {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-green-50">
       {data ? (
         <div className={`${styles.section} w-[90%] sm:w-[80%]`}>
           <div className="w-full py-5">
@@ -188,7 +189,7 @@ const ProductDetails = ({ data }) => {
                 <div className="flex items-center pt-8">
                   <Link to={`/shop/preview/${data?.shop._id}`}>
                     <img
-                      // src={`${data?.shop?.avatar?.url}`}
+                      src={`${backend_url}/img/shops/${seller.avatar}`}
                       alt=""
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
@@ -203,7 +204,7 @@ const ProductDetails = ({ data }) => {
                       ({averageRating}/5) Ratings
                     </h5>
                   </div>
-                  <div
+                  {/* <div
                     className={`${styles.button} bg-[#6443d1] mt-4 rounded h-11`}
                   >
                     <span
@@ -212,7 +213,7 @@ const ProductDetails = ({ data }) => {
                     >
                       send message <AiOutlineMessage className="ml-1" />
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -239,9 +240,9 @@ const ProductDetailInfo = ({
 }) => {
   const [active, setActive] = useState(1);
   const { user } = useSelector((state) => state.user);
-  const {seller} = useSelector((state)=>state.seller);
+  const { seller } = useSelector((state) => state.seller);
   return (
-    <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
+    <div className="bg-green-100 px-3 800px:px-10 py-2 rounded">
       <div className="w-full flex justify-between border-b pt-10 pb-2">
         <div className="relative">
           <h5
