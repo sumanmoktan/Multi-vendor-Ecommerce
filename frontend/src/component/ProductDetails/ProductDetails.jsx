@@ -107,7 +107,7 @@ const ProductDetails = ({ data }) => {
                   className="w-[90%]"
                 />
 
-                <div className="w-full flex">
+                <div className="w-full flex border-red-600">
                   {data.images &&
                     data.images.map((image, index) => (
                       <div
@@ -239,6 +239,7 @@ const ProductDetailInfo = ({
 }) => {
   const [active, setActive] = useState(1);
   const { user } = useSelector((state) => state.user);
+  const {seller} = useSelector((state)=>state.seller);
   return (
     <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
       <div className="w-full flex justify-between border-b pt-10 pb-2">
@@ -296,7 +297,7 @@ const ProductDetailInfo = ({
             data.reviews.map((item, index) => (
               <div className="w-full flex my-2">
                 <img
-                  src={`${backend_url}/img/users/${user.photo}`}
+                  src={`${backend_url}/img/users/${item.user.photo}`}
                   alt=""
                   className="w-[50px] h-[50px] rounded-full"
                 />
@@ -323,7 +324,7 @@ const ProductDetailInfo = ({
           <div className="w-full sm:w-1/2">
             <div className="flex items-center">
               <img
-                // src={data.shop.shop_avatar.url}
+                src={`${backend_url}/img/shops/${seller.avatar}`}
                 alt=""
                 className="w-12 h-12 rounded-full"
               />
@@ -334,12 +335,7 @@ const ProductDetailInfo = ({
                 </h5>
               </div>
             </div>
-            <p className="mt-3">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ipsa,
-              vitae. Delectus, natus. Accusantium beatae esse provident dolore
-              explicabo. Autem unde voluptatem vitae expedita accusantium dicta
-              adipisci cupiditate, alias delectus illum.
-            </p>
+            <p className="mt-3">{data?.shop?.description}</p>
           </div>
           <div className="w-full sm:w-1/2 mt-5 sm:mt-0 sm:flex flex-col items-end">
             <div className="text-left">
