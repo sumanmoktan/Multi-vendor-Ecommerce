@@ -17,6 +17,7 @@ import {
 import { toast } from "react-toastify";
 
 const ProductCardDetails = ({ setOpen, data }) => {
+  const { products } = useSelector((state) => state.products);
   const { cart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
   const dispatch = useDispatch();
@@ -70,6 +71,23 @@ const ProductCardDetails = ({ setOpen, data }) => {
     setClick(!click);
     dispatch(addToWishlist(data));
   };
+
+  const totalReviewsLength =
+    products &&
+    products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+  const totalRatings =
+    products &&
+    products.reduce(
+      (acc, product) =>
+        acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+      0
+    );
+
+  const avg = totalRatings / totalReviewsLength || 0;
+
+  const averageRating = avg.toFixed(2);
+
   return (
     <div className="bg-[#fff]">
       {data ? (
@@ -97,20 +115,20 @@ const ProductCardDetails = ({ setOpen, data }) => {
                   <div>
                     <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
                     <h5 className="pb-3 text-[15px]">
-                      ({data.shop.ratings}) Ratings
+                      ({averageRating}/5) Ratings
                     </h5>
                   </div>
                 </div>
-                <div
+                {/* <div
                   className={`${styles.button} bg-[#000] mt-4 rounded h-11`}
                   onClick={handleMessageSubmit}
                 >
                   <span className="text-[#fff] flex items-center">
                     send Message <AiOutlineMessage ml-1 />
                   </span>
-                </div>
+                </div> */}
                 <h5 className="text-[15px] text-[red] mt-5">
-                  ({data.total_sell}) sold out
+                  ({data?.sold_out}) sold out
                 </h5>
               </div>
               <div className="w-full 800px:w-[50%] pt-5 pl-[5px] pr-[5px]">

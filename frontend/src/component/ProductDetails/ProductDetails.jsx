@@ -89,9 +89,9 @@ const ProductDetails = ({ data }) => {
 
   const averageRating = avg.toFixed(2);
 
-  const handleMessage = () => {
-    navigate("/inbox:conversation-ekjekjrkejr");
-  };
+  // const handleMessage = () => {
+  //   navigate("/inbox:conversation-ekjekjrkejr");
+  // };
 
   return (
     <div className="bg-green-50">
