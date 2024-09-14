@@ -19,15 +19,18 @@ import { getAllProductsShop } from "../../redux/action/productAction";
 import { backend_url } from "../../server";
 
 const ProductDetails = ({ data }) => {
-  const {seller} = useSelector((state)=>state.seller);
+  const { seller } = useSelector((state) => state.seller);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { products } = useSelector((state) => state.products);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     dispatch(getAllProductsShop(data && data.shop._id));
@@ -93,6 +96,22 @@ const ProductDetails = ({ data }) => {
   //   navigate("/inbox:conversation-ekjekjrkejr");
   // };
 
+  const handleMouseEnter = () => {
+    setIsZoomed(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsZoomed(false);
+  };
+
+  const handleMouseMove = (e) => {
+    const { left, top, width, height } = e.target.getBoundingClientRect();
+    const x = ((e.pageX - left) / width) * 100;
+    const y = ((e.pageY - top) / height) * 100;
+
+    setZoomPosition({ x, y });
+  };
+
   return (
     <div className="bg-green-50">
       {data ? (
@@ -100,29 +119,46 @@ const ProductDetails = ({ data }) => {
           <div className="w-full py-5">
             <div className="block w-full sm:flex">
               <div className="w-full sm:w-[50%]">
-                <img
-                  src={`${backend_url}/img/product/${
-                    data.images && data.images[select]
-                  }`}
-                  alt=""
-                  className="w-[90%]"
-                />
+              <div
+                  className="relative w-[90%] cursor-zoom-in"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onMouseMove={handleMouseMove}
+                >
+                  <img
+                    src={`${backend_url}/img/product/${data.images && data.images[select]}`}
+                    alt=""
+                    className="w-full"
+                  />
 
-                <div className="w-full flex border-red-600">
+                  {/* Zoomed Image Popup */}
+                  {isZoomed && (
+                    <div
+                      className="absolute top-0 left-full ml-5 w-[200px] h-[200px] border border-gray-400 overflow-hidden"
+                      style={{
+                        backgroundImage: `url(${backend_url}/img/product/${data.images[select]})`,
+                        backgroundSize: "200%",
+                        backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                      }}
+                    />
+                  )}
+                </div>
+
+                <div className="w-full flex border-red-600 mt-4">
                   {data.images &&
                     data.images.map((image, index) => (
                       <div
                         key={index}
-                        className={`${
-                          select === index ? "border" : "null"
-                        } cursor-pointer `}
+                       className="relative cursor-pointer mr-3"
                       >
                         <img
                           src={`${backend_url}/img/product/${
                             data.images && data.images[index]
                           }`}
                           alt=""
-                          className="h-[70px] overflow-hidden mr-3 mt-4"
+                          className={`h-[70px] overflow-hidden ${
+                            select === index ? 'border-2 border-green-600' : ''
+                          }`}
                           onClick={() => setSelect(index)}
                         />
                       </div>

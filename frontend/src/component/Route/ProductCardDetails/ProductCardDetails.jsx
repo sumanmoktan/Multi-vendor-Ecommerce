@@ -15,6 +15,7 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const ProductCardDetails = ({ setOpen, data }) => {
   const { products } = useSelector((state) => state.products);
@@ -25,9 +26,9 @@ const ProductCardDetails = ({ setOpen, data }) => {
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(false);
 
-  const handleMessageSubmit = () => {
-    // console.log(suman);
-  };
+  // const handleMessageSubmit = () => {
+  //   // console.log(suman);
+  // };
 
   const decrementcount = () => {
     if (count > 1) {
@@ -113,7 +114,11 @@ const ProductCardDetails = ({ setOpen, data }) => {
                     alt=""
                   /> */}
                   <div>
-                    <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
+                    <Link to={`/shop/preview/${data?.shop._id}`}>
+                      <h5 className={`${styles.shop_name}`}>
+                        {data.shop.name}
+                      </h5>
+                    </Link>
                     <h5 className="pb-3 text-[15px]">
                       ({averageRating}/5) Ratings
                     </h5>

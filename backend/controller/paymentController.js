@@ -1,5 +1,7 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const catchAsync = require("../middleware/catchAsync");
+const axios = require('axios');
+const crypto = require('crypto');
 
 exports.myPayment = catchAsync(async (req, res, next) => {
   const myPayment = await stripe.paymentIntents.create({
@@ -21,79 +23,81 @@ exports.stripeApiKey = catchAsync(async (req, res, next) => {
   });
 });
 
-// const axios = require("axios");
+exports.initialPayment = catchAsync(async (req, res, next) => {
+  const { totalPrice, orderId } = req.body;
 
-// // Function to initiate Khalti payment
-// exports.callKhalti = async (req, res) => {
-//   try {
-//     const { amount, purchase_order_id, purchase_order_name, customer_info } =
-//       req.body;
+  const esewaUrl = "https://uat.esewa.com.np/epay/main"; // Use production URL for live payments
+  const successUrl = "http://localhost:8000/payment/esewa/success";
+  const failureUrl = "http://localhost:8000/payment/esewa/failure";
 
-//     const formData = {
-//       return_url: "http://yourdomain.com/khalti/callback",
-//       website_url: "http://yourdomain.com",
-//       amount: amount * 100, // Convert to paisa
-//       purchase_order_id,
-//       purchase_order_name,
-//       customer_info,
-//     };
+  const esewaData = {
+    amt: totalPrice,
+    psc: 0, // service charge
+    pdc: 0, // delivery charge
+    tAmt: totalPrice, // total amount
+    pid: orderId,
+    scd: "EPAYTEST", // Esewa merchant code
+    su: successUrl,
+    fu: failureUrl,
+  };
 
-//     const headers = {
-//       Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
-//       "Content-Type": "application/json",
-//     };
+  // Redirect the user to the Esewa payment page with the payment data
+  res.redirect(
+    `${esewaUrl}?amt=${esewaData.amt}&pdc=${esewaData.pdc}&psc=${esewaData.psc}&tAmt=${esewaData.tAmt}&pid=${esewaData.pid}&scd=${esewaData.scd}&su=${esewaData.su}&fu=${esewaData.fu}`
+  );
+});
 
-//     const response = await axios.post(
-//       "https://a.khalti.com/api/v2/epayment/initiate/",
-//       formData,
-//       { headers }
-//     );
+exports.handlingSuccess = catchAsync(async (req, res) => {
+  const { oid, amt, refId } = req.query; // oid = orderId, amt = amount, refId = payment reference from Esewa
 
-//     res.json({
-//       message: "Khalti payment initiated successfully",
-//       payment_method: "khalti",
-//       data: response.data,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(400).json({ error: err?.message });
-//   }
-// };
+  const esewaVerificationUrl = "https://uat.esewa.com.np/epay/transrec"; // Use production URL for live payments
 
-// // Function to handle Khalti callback and verify payment
-// exports.handleKhaltiCallback = async (req, res, next) => {
-//   try {
-//     const { pidx, purchase_order_id, transaction_id, message } = req.query;
+  const esewaData = {
+    amt,
+    rid: refId,
+    pid: oid,
+    scd: "EPAYTEST", // Esewa merchant code
+  };
 
-//     if (message) {
-//       return res
-//         .status(400)
-//         .json({ error: message || "Error Processing Khalti" });
-//     }
+  try {
+    // Verify the payment by sending a POST request to Esewa's verification endpoint
+    const { data } = await axios.post(esewaVerificationUrl, esewaData, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
 
-//     const headers = {
-//       Authorization: `Key ${process.env.KHALTI_SECRET_KEY}`,
-//       "Content-Type": "application/json",
-//     };
+    if (data.includes("<response_code>Success</response_code>")) {
+      // Payment verification successful
+      // Update order status in your database
+      await Order.findByIdAndUpdate(oid, {
+        "paymentInfo.id": refId,
+        "paymentInfo.status": "Success",
+        "paymentInfo.type": "Esewa",
+        paidAt: Date.now(),
+      });
 
-//     const response = await axios.post(
-//       "https://a.khalti.com/api/v2/epayment/lookup/",
-//       { pidx },
-//       { headers }
-//     );
+      res.status(200).json({ message: "Payment successful and verified." });
+    } else {
+      res.status(400).json({ message: "Payment verification failed." });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error verifying payment with Esewa.", error });
+  }
+});
 
-//     if (response.data.status !== "Completed") {
-//       return res.status(400).json({ error: "Payment not completed" });
-//     }
+exports.handlingFailure = catchAsync(async (req, res, next) => {
+  const { oid } = req.query; // oid = orderId
 
-//     // Pass the transaction details to the next middleware
-//     req.transaction_uuid = purchase_order_id;
-//     req.transaction_code = pidx;
-//     next();
-//   } catch (err) {
-//     console.log(err);
-//     return res
-//       .status(400)
-//       .json({ error: err?.message || "Error Processing Khalti" });
-//   }
-// };
+  // Update order status in the database to reflect failure
+  Order.findByIdAndUpdate(oid, {
+    "paymentInfo.status": "Failed",
+    "paymentInfo.type": "Esewa",
+  })
+    .then(() => res.status(200).json({ message: "Payment failed." }))
+    .catch((error) =>
+      res.status(500).json({ message: "Error updating order status.", error })
+    );
+});

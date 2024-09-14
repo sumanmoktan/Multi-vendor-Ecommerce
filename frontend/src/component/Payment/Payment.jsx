@@ -109,7 +109,7 @@ const Payment = () => {
       };
 
       const { data } = await axios.post(
-        `${server}/api/v1/payment/process`,
+        `${server}/payment/process`,
         paymentData,
         config
       );
@@ -134,7 +134,7 @@ const Payment = () => {
           };
 
           await axios
-            .post(`${server}/api/v1/order/create-order`, order, config)
+            .post(`${server}/order/create-order`, order, config)
             .then((res) => {
               setOpen(false);
               navigate("/order/success");
@@ -148,6 +148,40 @@ const Payment = () => {
     } catch (error) {
       toast.error(error);
     }
+  };
+
+  const esewaPayment = async (e) => {
+    e.preventDefault();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    order.paymentInfo = {
+      type: "esewa",
+    };
+
+    const orderResponse = await axios.post(
+      `${server}/api/v1/order/create-order`,
+      order,
+      config
+    );
+
+    const { orders } = orderResponse.data;
+
+    if (!orders || orders.length === 0) {
+      throw new Error("No orders returned in the response");
+    }
+
+    const orderId = orders[0]._id; // Access the first order in the array
+
+    console.log("Order ID:", orderId);
+
+    await axios.post(`${server}/api/v1/payment/esewa`, {
+      totalPrice: orderData.totalPrice,
+      orderId,
+    });
   };
 
   const cashOnDeliveryHandler = async (e) => {
@@ -186,6 +220,7 @@ const Payment = () => {
             onApprove={onApprove}
             createOrder={createOrder}
             paymentHandler={paymentHandler}
+            esewaPayment={esewaPayment}
             cashOnDeliveryHandler={cashOnDeliveryHandler}
           />
         </div>
@@ -204,6 +239,7 @@ const PaymentInfo = ({
   onApprove,
   createOrder,
   paymentHandler,
+  esewaPayment,
   cashOnDeliveryHandler,
 }) => {
   const [select, setSelect] = useState(1);
@@ -388,12 +424,43 @@ const PaymentInfo = ({
             ) : null}
           </div>
           <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
-            Cash on Delivery
+            esewa
           </h4>
         </div>
 
         {/* cash on delivery */}
         {select === 3 ? (
+          <div className="w-full flex">
+            <form className="w-full" onSubmit={esewaPayment}>
+              <input
+                type="submit"
+                value="pay with esewa"
+                className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
+              />
+            </form>
+          </div>
+        ) : null}
+      </div>
+
+      <br />
+      {/* cash on delivery */}
+      <div>
+        <div className="flex w-full pb-5 border-b mb-2">
+          <div
+            className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
+            onClick={() => setSelect(4)}
+          >
+            {select === 4 ? (
+              <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
+            ) : null}
+          </div>
+          <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
+            Cash on Delivery
+          </h4>
+        </div>
+
+        {/* cash on delivery */}
+        {select === 4 ? (
           <div className="w-full flex">
             <form className="w-full" onSubmit={cashOnDeliveryHandler}>
               <input

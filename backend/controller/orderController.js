@@ -5,37 +5,41 @@ const productModel = require("../model/productModel");
 const shopModel = require("../model/shopModel");
 
 exports.createOrder = catchAsync(async (req, res, next) => {
-  const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
+  try {
+    const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
 
-  //   group cart items by shopId
-  const shopItemsMap = new Map();
+    //   group cart items by shopId
+    const shopItemsMap = new Map();
 
-  for (const item of cart) {
-    const shopId = item.shopId;
-    if (!shopItemsMap.has(shopId)) {
-      shopItemsMap.set(shopId, []);
+    for (const item of cart) {
+      const shopId = item.shopId;
+      if (!shopItemsMap.has(shopId)) {
+        shopItemsMap.set(shopId, []);
+      }
+      shopItemsMap.get(shopId).push(item);
     }
-    shopItemsMap.get(shopId).push(item);
-  }
 
-  // create an order for each shop
-  const orders = [];
+    // create an order for each shop
+    const orders = [];
 
-  for (const [shopId, items] of shopItemsMap) {
-    const order = await orderModel.create({
-      cart: items,
-      shippingAddress,
-      user,
-      totalPrice,
-      paymentInfo,
+    for (const [shopId, items] of shopItemsMap) {
+      const order = await orderModel.create({
+        cart: items,
+        shippingAddress,
+        user,
+        totalPrice,
+        paymentInfo,
+      });
+      orders.push(order);
+    }
+
+    res.status(201).json({
+      success: true,
+      orders,
     });
-    orders.push(order);
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
   }
-
-  res.status(201).json({
-    success: true,
-    orders,
-  });
 });
 
 //Getting all order of user
@@ -170,3 +174,14 @@ exports.AcceptRefund = catchAsync(async (req, res, next) => {
     await product.save({ validateBeforeSave: false });
   }
 });
+
+exports.createSignature = (message) => {
+  const secret = "8gBm/:&EnhH.1/q"; //different in production
+  // Create an HMAC-SHA256 hash
+  const hmac = crypto.createHmac("sha256", secret);
+  hmac.update(message);
+
+  // Get the digest in base64 format
+  const hashInBase64 = hmac.digest("base64");
+  return hashInBase64;
+};
