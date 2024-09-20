@@ -119,14 +119,16 @@ const ProductDetails = ({ data }) => {
           <div className="w-full py-5">
             <div className="block w-full sm:flex">
               <div className="w-full sm:w-[50%]">
-              <div
+                <div
                   className="relative w-[90%] cursor-zoom-in"
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                   onMouseMove={handleMouseMove}
                 >
                   <img
-                    src={`${backend_url}/img/product/${data.images && data.images[select]}`}
+                    src={`${backend_url}/img/product/${
+                      data.images && data.images[select]
+                    }`}
                     alt=""
                     className="w-full"
                   />
@@ -147,17 +149,14 @@ const ProductDetails = ({ data }) => {
                 <div className="w-full flex border-red-600 mt-4">
                   {data.images &&
                     data.images.map((image, index) => (
-                      <div
-                        key={index}
-                       className="relative cursor-pointer mr-3"
-                      >
+                      <div key={index} className="relative cursor-pointer mr-3">
                         <img
                           src={`${backend_url}/img/product/${
                             data.images && data.images[index]
                           }`}
                           alt=""
                           className={`h-[70px] overflow-hidden ${
-                            select === index ? 'border-2 border-green-600' : ''
+                            select === index ? "border-2 border-green-600" : ""
                           }`}
                           onClick={() => setSelect(index)}
                         />
@@ -225,8 +224,12 @@ const ProductDetails = ({ data }) => {
                 <div className="flex items-center pt-8">
                   <Link to={`/shop/preview/${data?.shop._id}`}>
                     <img
-                      src={`${backend_url}/img/shops/${seller.avatar}`}
-                      alt=""
+                      src={
+                        seller?.avatar
+                          ? `${backend_url}/img/shops/${seller.avatar}`
+                          : "default-image-path"
+                      }
+                      alt="Seller Avatar"
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
                   </Link>

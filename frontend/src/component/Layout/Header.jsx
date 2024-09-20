@@ -68,14 +68,14 @@ const Header = ({ activeHeading }) => {
               placeholder="Search Product..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
+              className="h-[40px] w-full px-2 border-green-500 border-[2px] rounded-md"
             />
             <AiOutlineSearch
               size={30}
               className="absolute right-2 top-1.5 cursor-pointer"
             />
             {searchData && searchData.length !== 0 ? (
-              <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
+              <div className="absolute min-h-[30vh] bg-green-200 shadow-sm-2 z-[9] p-4">
                 {searchData &&
                   searchData.map((i, index) => {
                     // const d = i.name;
@@ -170,7 +170,7 @@ const Header = ({ activeHeading }) => {
             <div className={`${styles.noramlFlex}`}>
               <div
                 className="relative cursor-pointer mr-[15px]"
-                // onClick={() => setOpenWishlist(true)}
+                onClick={() => setOpenWishlist(true)}
               >
                 {isAuthenticated ? (
                   <Link to="/profile" className="text-white">
@@ -201,7 +201,9 @@ const Header = ({ activeHeading }) => {
 
       {/* mobile header */}
       <div
-        className={`w-full h-[60px] bg-[#fff] z-50 top-0 left-0 shadow-sm sm:hidden`}
+        className={`${
+          active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
+        }w-full h-[60px] bg-[#fff] z-50 top-0 left-0 shadow-sm sm:hidden`}
       >
         <div className="w-full flex items-center justify-between">
           <div>
@@ -231,6 +233,11 @@ const Header = ({ activeHeading }) => {
               </span>
             </div>
           </div>
+          {/* cart popup */}
+          {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
+
+          {/* wishlist popup */}
+          {openWishlist ? <WhisList setOpenWishlist={setOpenWishlist} /> : null}
         </div>
         {open && (
           <div
