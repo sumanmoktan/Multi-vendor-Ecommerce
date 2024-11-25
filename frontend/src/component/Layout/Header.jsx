@@ -252,7 +252,7 @@ const Header = ({ activeHeading }) => {
                   >
                     <AiOutlineHeart size={30} className="mt-5 ml-3" />
                     <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
-                      {WhisList && WhisList.length}
+                      {wishlist && wishlist.length}
                     </span>
                   </div>
                 </div>
@@ -262,21 +262,20 @@ const Header = ({ activeHeading }) => {
                   onClick={() => setOpen(false)}
                 />
               </div>
-
               <div className="my-8 w-[92%] m-auto h-[40px relative]">
                 <input
                   type="search"
                   placeholder="Search Product..."
-                  className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
+                  className="h-[40px] w-full px-2 border-[#36da5f] border-[2px] rounded-md"
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
                 {searchData && (
-                  <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
+                  <div className="absolute bg-[#67daa4] z-10 shadow w-full left-0 p-3">
                     {searchData.map((i) => {
-                      const d = i.name;
+                      // const d = i.name;
 
-                      const Product_name = d.replace(/\s+/g, "-");
+                      // const Product_name = d.replace(/\s+/g, "-");
                       return (
                         <Link to={`/product/${i._id}`}>
                           <div className="flex items-center">

@@ -37,6 +37,10 @@ const productSchema = new mongoose.Schema({
       user: {
         type: Object,
       },
+      // user: {
+      //   type: mongoose.Schema.Types.ObjectId,
+      //   ref: "User", // Assuming you have a User model
+      // },
       rating: {
         type: Number,
       },

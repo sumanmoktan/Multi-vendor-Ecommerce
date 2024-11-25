@@ -22,4 +22,9 @@ router.patch(
   productController.createReview
 );
 
+router.get(
+  "/:userId",
+  productController.recommendationsProduct
+);
+
 module.exports = router;
