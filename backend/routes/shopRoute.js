@@ -1,6 +1,6 @@
 const express = require("express");
 const shopController = require("../controller/shopController");
-const { isSeller } = require("../middleware/auth");
+const { isSeller, isAuthenticated } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -24,5 +24,8 @@ router.patch(
   shopController.UploadShopProfile
 );
 router.patch("/update-seller-info", isSeller, shopController.updateSellerInfo);
+
+//routes for admin
+router.get("/admin-all-sellers", isAuthenticated, shopController.getAllSellerAdmin);
 
 module.exports = router;

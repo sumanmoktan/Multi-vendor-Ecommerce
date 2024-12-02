@@ -1,6 +1,6 @@
 const express = require("express");
 const orderController = require("../controller/orderController");
-const { isSeller } = require("../middleware/auth");
+const { isSeller, isAuthenticated } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -17,6 +17,11 @@ router.patch(
   "/order-refund-success/:id",
   isSeller,
   orderController.AcceptRefund
+);
+router.get(
+  "/admin-all-orders",
+  isAuthenticated,
+  orderController.getAllOrderAdmin
 );
 
 module.exports = router;

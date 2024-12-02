@@ -175,13 +175,28 @@ exports.AcceptRefund = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.createSignature = (message) => {
-  const secret = "8gBm/:&EnhH.1/q"; //different in production
-  // Create an HMAC-SHA256 hash
-  const hmac = crypto.createHmac("sha256", secret);
-  hmac.update(message);
+exports.getAllOrderAdmin = catchAsync(async (req, res, next) => {
+  try {
+    const orders = await orderModel.find().sort({
+      deliveredAt: -1,
+      createdAt: -1,
+    });
+    res.status(201).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
 
-  // Get the digest in base64 format
-  const hashInBase64 = hmac.digest("base64");
-  return hashInBase64;
-};
+// exports.createSignature = (message) => {
+//   const secret = "8gBm/:&EnhH.1/q"; //different in production
+//   // Create an HMAC-SHA256 hash
+//   const hmac = crypto.createHmac("sha256", secret);
+//   hmac.update(message);
+
+//   // Get the digest in base64 format
+//   const hashInBase64 = hmac.digest("base64");
+//   return hashInBase64;
+// };

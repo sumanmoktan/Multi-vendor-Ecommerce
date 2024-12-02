@@ -128,14 +128,14 @@ exports.UploadShopProfile = catchAsync(async (req, res, next) => {
   const seller = await shopModel.findById(req.seller._id);
 
   if (!seller) {
-    return next(new ErrorHandler('Seller not found with this id', 404));
+    return next(new ErrorHandler("Seller not found with this id", 404));
   }
 
   seller.avatar = req.file.filename;
   await seller.save();
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       seller,
     },
@@ -164,4 +164,19 @@ exports.updateSellerInfo = catchAsync(async (req, res, next) => {
     success: true,
     shop,
   });
+});
+
+//all seller for admin
+exports.getAllSellerAdmin = catchAsync(async (req, res, next) => {
+  try {
+    const sellers = await shopModel.find().sort({
+      createdAt: -1,
+    });
+    res.status(201).json({
+      success: true,
+      sellers,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
 });
