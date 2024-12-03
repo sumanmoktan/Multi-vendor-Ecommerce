@@ -103,7 +103,6 @@ export const getAllProducts = () => async (dispatch) => {
     const { data } = await axios.get(
       `${server}/api/v1/product/get-all-products`
     );
-    console.log(data);
     dispatch({
       type: "getAllProductsSuccess",
       payload: data.products,

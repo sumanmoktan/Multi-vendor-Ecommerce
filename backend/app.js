@@ -14,10 +14,11 @@ const eventRoute = require("./routes/eventRoute");
 const coupounRoute = require("./routes/coupounRoute");
 const paymentRoute = require("./routes/paymentRoute");
 const orderRoute = require("./routes/orderRoute");
+const withdrawRoute = require("./routes/withdrawRoute");
 
 app.use(express.json());
 // Serve static files from the public directory
-app.use(express.static( "public"));
+app.use(express.static("public"));
 app.use(cookieparser());
 app.use(
   cors({
@@ -43,6 +44,7 @@ app.use("/api/v1/event", eventRoute);
 app.use("/api/v1/coupoun", coupounRoute);
 app.use("/api/v1/payment", paymentRoute);
 app.use("/api/v1/order", orderRoute);
+app.use("/api/v1/withdraw", withdrawRoute);
 
 //this is use for error handling
 app.use(ErrorHandler);

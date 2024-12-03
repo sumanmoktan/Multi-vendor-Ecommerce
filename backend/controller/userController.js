@@ -7,6 +7,7 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/Email");
 const sendToken = require("../utils/jwtToken");
+const userModel = require("../model/userModel");
 
 const multerStorage = multer.memoryStorage();
 
@@ -198,14 +199,14 @@ exports.updateAvatar = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
   if (!user) {
-    return next(new ErrorHandler('User not found', 404));
+    return next(new ErrorHandler("User not found", 404));
   }
 
   user.photo = req.file.filename;
   await user.save();
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       user,
     },
@@ -281,4 +282,36 @@ exports.changePassword = catchAsync(async (req, res, next) => {
     status: "success",
     message: "password is update successfully",
   });
+});
+
+//For admin
+exports.getAllUserAdmin = catchAsync(async (req, res, next) => {
+  try {
+    const users = await userModel.find().sort({
+      createdAt: -1,
+    });
+    res.status(201).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
+
+exports.deleteUserAdmin = catchAsync(async (req, res, next) => {
+  try {
+    const user = await userModel.findByIdAndDelete(req.params.id);
+
+    if (!user) {
+      return next(new ErrorHandler("User is not available with this id", 400));
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "User deleted successfully!",
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
 });

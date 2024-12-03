@@ -41,6 +41,7 @@ import {
   AdminDashboardOrders,
   AdminDashboardProducts,
   AdminDashboardEvents,
+  AdminDashboardWithdraw
 } from "./routes/AdminRoute";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -295,14 +296,14 @@ function App() {
               </ProtectedAdminRoute>
             }
           />
-          {/* <Route
+          <Route
             path="/admin-withdraw-request"
             element={
               <ProtectedAdminRoute>
                 <AdminDashboardWithdraw />
               </ProtectedAdminRoute>
             }
-          /> */}
+          />
         </Routes>
 
         <ToastContainer

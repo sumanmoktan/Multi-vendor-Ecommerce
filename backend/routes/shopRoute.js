@@ -1,6 +1,6 @@
 const express = require("express");
 const shopController = require("../controller/shopController");
-const { isSeller, isAuthenticated } = require("../middleware/auth");
+const { isSeller, isAuthenticated, isAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -25,7 +25,28 @@ router.patch(
 );
 router.patch("/update-seller-info", isSeller, shopController.updateSellerInfo);
 
+router.put(
+  "/update-payment-methods",
+  isSeller,
+  shopController.updatingWithdrawMethod
+);
+router.delete(
+  "/delete-withdraw-method",
+  isSeller,
+  shopController.DeleteWithdrawMethod
+);
+
 //routes for admin
-router.get("/admin-all-sellers", isAuthenticated, shopController.getAllSellerAdmin);
+router.get(
+  "/admin-all-sellers",
+  isAuthenticated,
+  shopController.getAllSellerAdmin
+);
+router.delete(
+  "/delete-seller/:id",
+  isAuthenticated,
+  isAdmin("admin"),
+  shopController.deleteSeller
+);
 
 module.exports = router;

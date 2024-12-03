@@ -168,6 +168,23 @@ exports.createReview = catchAsync(async (req, res, next) => {
   });
 });
 
+//all product for admin
+exports.getAllProductAdmin = catchAsync(async (req, res, next) => {
+  try {
+    const products = await productModel.find().sort({
+      createdAt: -1,
+    });
+    res.status(201).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
+
+//Function for recommendation algorithm
+
 exports.recommendationsProduct = catchAsync(async (req, res, next) => {
   const { userId } = req.params;
 

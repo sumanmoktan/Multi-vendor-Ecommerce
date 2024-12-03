@@ -14,7 +14,6 @@ export const getAllSellers = () => async (dispatch) => {
         withCredentials: true,
       }
     );
-    console.log(data);
 
     dispatch({
       type: "getAllSellersSuccess",

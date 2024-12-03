@@ -51,8 +51,21 @@ export const userReducer = createReducer(initialState, (builder) => {
       state.successMessage = action.payload.successMessage;
       state.user = action.payload.user;
     })
-    .addCase("deleteUserAddressFailed", (state, action)=>{
+    .addCase("deleteUserAddressFailed", (state, action) => {
       state.addressloading = false;
+      state.error = action.payload;
+    })
+
+    // get all users --- admin
+    .addCase("getAllUsersRequest", (state) => {
+      state.usersLoading = true;
+    })
+    .addCase("getAllUsersSuccess", (state, action) => {
+      state.usersLoading = false;
+      state.users = action.payload;
+    })
+    .addCase("getAllUsersFailed", (state, action) => {
+      state.usersLoading = false;
       state.error = action.payload;
     })
     .addCase("clearErrors", (state) => {

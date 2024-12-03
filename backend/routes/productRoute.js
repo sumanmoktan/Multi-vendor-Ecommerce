@@ -1,7 +1,7 @@
 const express = require("express");
 const productController = require("../controller/productController");
 // const { upload } = require("../multer");
-const { isAuthenticated } = require("../middleware/auth");
+const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -22,9 +22,14 @@ router.patch(
   productController.createReview
 );
 
+//routes for admin
 router.get(
-  "/:userId",
-  productController.recommendationsProduct
+  "/admin-all-products",
+  isAuthenticated,
+  isAdmin("admin"),
+  productController.getAllProductAdmin
 );
+
+router.get("/:userId", productController.recommendationsProduct);
 
 module.exports = router;

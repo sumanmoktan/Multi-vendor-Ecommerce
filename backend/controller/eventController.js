@@ -45,48 +45,48 @@ exports.resizeEventImages = catchAsync(async (req, res, next) => {
 });
 
 exports.createEvent = catchAsync(async (req, res, next) => {
-//   try {
-//     const shopId = req.body.shopId;
-//     const shop = await shopModel.findById(shopId);
+  //   try {
+  //     const shopId = req.body.shopId;
+  //     const shop = await shopModel.findById(shopId);
 
-//     if (!shop) {
-//       return next(new ErrorHandler("Shop Id is invalid", 400));
-//     } else {
-//       const productData = req.body;
-//       productData.shop = shop;
+  //     if (!shop) {
+  //       return next(new ErrorHandler("Shop Id is invalid", 400));
+  //     } else {
+  //       const productData = req.body;
+  //       productData.shop = shop;
 
-//       const event = await eventModel.create(productData);
+  //       const event = await eventModel.create(productData);
 
-//       res.status(201).json({
-//         success: true,
-//         event,
-//       });
-//     }
-//   } catch (error) {
-//     return next(new ErrorHandler(error, 400));
-//   }
-// });
-try {
-  const shopId = req.body.shopId;
-  const shop = await shopModel.findById(shopId);
+  //       res.status(201).json({
+  //         success: true,
+  //         event,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     return next(new ErrorHandler(error, 400));
+  //   }
+  // });
+  try {
+    const shopId = req.body.shopId;
+    const shop = await shopModel.findById(shopId);
 
-  if (!shop) {
-    return next(new ErrorHandler("Shop Id is invalid", 400));
-  } else {
-    const productData = { ...req.body, tags: JSON.parse(req.body.tags) }; // Parse tags from JSON
+    if (!shop) {
+      return next(new ErrorHandler("Shop Id is invalid", 400));
+    } else {
+      const productData = { ...req.body, tags: JSON.parse(req.body.tags) }; // Parse tags from JSON
 
-    productData.shop = shop;
+      productData.shop = shop;
 
-    const event = await eventModel.create(productData);
+      const event = await eventModel.create(productData);
 
-    res.status(201).json({
-      success: true,
-      event,
-    });
+      res.status(201).json({
+        success: true,
+        event,
+      });
+    }
+  } catch (error) {
+    return next(new ErrorHandler(error, 400));
   }
-} catch (error) {
-  return next(new ErrorHandler(error, 400));
-}
 });
 
 exports.GetEvent = catchAsync(async (req, res, next) => {
@@ -136,5 +136,20 @@ exports.DeleteEvent = catchAsync(async (req, res, next) => {
     });
   } catch (error) {
     return next(new ErrorHandler(error, 400));
+  }
+});
+
+//all events for admin
+exports.allEventAdmin = catchAsync(async (req, res, next) => {
+  try {
+    const events = await eventModel.find().sort({
+      createdAt: -1,
+    });
+    res.status(201).json({
+      success: true,
+      events,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
   }
 });

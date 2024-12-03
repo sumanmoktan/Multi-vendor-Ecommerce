@@ -4,8 +4,8 @@ import React, { useEffect } from "react";
 import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getAllProductsShop } from "../../redux/actions/product";
-import { deleteProduct } from "../../redux/actions/product";
+import { getAllProductsShop } from "../../redux/action/productAction";
+import { deleteProduct } from "../../redux/action/productAction";
 import Loader from "../Layout/Loader";
 import axios from "axios";
 import { server } from "../../server";
@@ -15,7 +15,7 @@ const AllProducts = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get(`${server}/product/admin-all-products`, {withCredentials: true}).then((res) => {
+    axios.get(`${server}/api/v1/product/admin-all-products`, {withCredentials: true}).then((res) => {
         setData(res.data.products);
     })
   }, []);

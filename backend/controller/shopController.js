@@ -180,3 +180,59 @@ exports.getAllSellerAdmin = catchAsync(async (req, res, next) => {
     return next(new ErrorHandler(error.message, 500));
   }
 });
+
+exports.deleteSeller = catchAsync(async (req, res, next) => {
+  try {
+    const seller = await shopModel.findById(req.params.id);
+
+    if (!seller) {
+      return next(
+        new ErrorHandler("Seller is not available with this id", 400)
+      );
+    }
+
+    await shopModel.findByIdAndDelete(req.params.id);
+
+    res.status(201).json({
+      success: true,
+      message: "Seller deleted successfully!",
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
+
+// update seller withdraw methods --- sellers
+exports.updatingWithdrawMethod = catchAsync(async (req, res, next) => {
+  try {
+    const { withdrawMethod } = req.body;
+
+    const seller = await shopModel.findByIdAndUpdate(req.seller._id, {
+      withdrawMethod,
+    });
+
+    res.status(201).json({
+      success: true,
+      seller,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
+
+exports.DeleteWithdrawMethod = catchAsync(async (req, res, next) => {
+  try {
+    const seller = await shopModel.findByIdAndDelete(req.seller._id);
+
+    if (!seller) {
+      return next(new ErrorHandler("Seller not found with this id", 400));
+    };
+
+    res.status(201).json({
+      success: true,
+      seller,
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
