@@ -103,20 +103,22 @@ const Payment = () => {
     e.preventDefault();
     try {
       const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       };
 
+      // Request client_secret from backend
       const { data } = await axios.post(
-        `${server}/payment/process`,
+        `${server}/api/v1/payment/process`,
         paymentData,
         config
       );
-
       const client_secret = data.client_secret;
 
-      if (!stripe || !elements) return;
+      if (!stripe || !elements) {
+        toast.error("Stripe is not initialized yet.");
+        return;
+      }
+
       const result = await stripe.confirmCardPayment(client_secret, {
         payment_method: {
           card: elements.getElement(CardNumberElement),
@@ -125,65 +127,33 @@ const Payment = () => {
 
       if (result.error) {
         toast.error(result.error.message);
-      } else {
-        if (result.paymentIntent.status === "succeeded") {
-          order.paymnentInfo = {
-            id: result.paymentIntent.id,
-            status: result.paymentIntent.status,
-            type: "Credit Card",
-          };
+      } else if (result.paymentIntent.status === "succeeded") {
+        // Populate order with payment info
+        order.paymentInfo = {
+          id: result.paymentIntent.id,
+          status: result.paymentIntent.status,
+          type: "Credit Card",
+        };
 
-          await axios
-            .post(`${server}/order/create-order`, order, config)
-            .then((res) => {
-              setOpen(false);
-              navigate("/order/success");
-              toast.success("Order successful!");
-              localStorage.setItem("cartItems", JSON.stringify([]));
-              localStorage.setItem("latestOrder", JSON.stringify([]));
-              window.location.reload();
-            });
-        }
+        // Save order to backend
+        await axios.post(`${server}/api/v1/order/create-order`, order, config);
+
+        // Success feedback
+        setOpen(false);
+        navigate("/order/success");
+        toast.success("Order successful!");
+        localStorage.removeItem("cartItems");
+        localStorage.removeItem("latestOrder");
+        window.location.reload();
       }
     } catch (error) {
-      toast.error(error);
+      console.error("Payment Error:", error);
+      toast.error(
+        error.response?.data?.message || "Payment failed. Please try again."
+      );
     }
   };
-
-  const esewaPayment = async (e) => {
-    e.preventDefault();
-
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    order.paymentInfo = {
-      type: "esewa",
-    };
-
-    const orderResponse = await axios.post(
-      `${server}/api/v1/order/create-order`,
-      order,
-      config
-    );
-
-    const { orders } = orderResponse.data;
-
-    if (!orders || orders.length === 0) {
-      throw new Error("No orders returned in the response");
-    }
-
-    const orderId = orders[0]._id; // Access the first order in the array
-
-    console.log("Order ID:", orderId);
-
-    await axios.post(`${server}/api/v1/payment/esewa`, {
-      totalPrice: orderData.totalPrice,
-      orderId,
-    });
-  };
-
+  
   const cashOnDeliveryHandler = async (e) => {
     e.preventDefault();
 
@@ -220,7 +190,6 @@ const Payment = () => {
             onApprove={onApprove}
             createOrder={createOrder}
             paymentHandler={paymentHandler}
-            esewaPayment={esewaPayment}
             cashOnDeliveryHandler={cashOnDeliveryHandler}
           />
         </div>
@@ -239,7 +208,6 @@ const PaymentInfo = ({
   onApprove,
   createOrder,
   paymentHandler,
-  esewaPayment,
   cashOnDeliveryHandler,
 }) => {
   const [select, setSelect] = useState(1);
@@ -417,40 +385,9 @@ const PaymentInfo = ({
         <div className="flex w-full pb-5 border-b mb-2">
           <div
             className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
-            onClick={() => setSelect(3)}
-          >
-            {select === 3 ? (
-              <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
-            ) : null}
-          </div>
-          <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
-            esewa
-          </h4>
-        </div>
-
-        {/* cash on delivery */}
-        {select === 3 ? (
-          <div className="w-full flex">
-            <form className="w-full" onSubmit={esewaPayment}>
-              <input
-                type="submit"
-                value="pay with esewa"
-                className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
-              />
-            </form>
-          </div>
-        ) : null}
-      </div>
-
-      <br />
-      {/* cash on delivery */}
-      <div>
-        <div className="flex w-full pb-5 border-b mb-2">
-          <div
-            className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
             onClick={() => setSelect(4)}
           >
-            {select === 4 ? (
+            {select === 3 ? (
               <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
             ) : null}
           </div>
@@ -460,7 +397,7 @@ const PaymentInfo = ({
         </div>
 
         {/* cash on delivery */}
-        {select === 4 ? (
+        {select === 3 ? (
           <div className="w-full flex">
             <form className="w-full" onSubmit={cashOnDeliveryHandler}>
               <input

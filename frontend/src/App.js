@@ -41,7 +41,7 @@ import {
   AdminDashboardOrders,
   AdminDashboardProducts,
   AdminDashboardEvents,
-  AdminDashboardWithdraw
+  AdminDashboardWithdraw,
 } from "./routes/AdminRoute";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -63,7 +63,8 @@ function App() {
   const [stripeApikey, setStripeApiKey] = useState("");
 
   async function getStripeApikey() {
-    const { data } = await axios.get(`${server}/api/v1/payment/stripeapike`);
+    const { data } = await axios.get(`${server}/api/v1/payment/stripeapikey`);
+    console.log(data);
     setStripeApiKey(data.stripeApikey);
   }
 
